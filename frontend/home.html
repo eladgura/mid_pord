@@ -1,0 +1,79 @@
+<!-- home.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Library</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <ul>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="login.html">login</a></li>
+                <li><a href="register.html">register</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1>Welcome to the Library</h1>
+        <div id="books-list"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>Contact us at: example@email.com</p>
+        </div>
+    </footer>
+
+    <!-- Axios CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        // Axios GET request to fetch all books
+        axios.get('http://localhost:5000/api/books')
+            .then(response => {
+                const books = response.data;
+                const booksList = document.getElementById('books-list');
+                books.forEach(book => {
+                    const bookDiv = document.createElement('div');
+                    bookDiv.classList.add('book');
+                    bookDiv.innerHTML = `
+                        <img src="http://localhost:5000/api/image/${book.image_filename}" alt="${book.title}">
+                        <div class="book-details">
+                            <h2>${book.name}</h2>
+                            <p>Author: ${book.author}</p>
+                            <p>Type: ${book.genre}</p>
+                            <p>In Stock: ${book.in_stock ? 'Yes' : 'No'}</p>
+                            <button class="loan-btn btn btn-primary" data-book-id="${book.id}">Loan Book</button>
+                        </div>
+                    `;
+                    booksList.appendChild(bookDiv);
+                });
+
+                // Add event listener to loan buttons
+                const loanButtons = document.querySelectorAll('.loan-btn');
+                loanButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        // Check if user is logged in (you need to implement this logic)
+                        const loggedIn = true; // Replace with actual logic to check if user is logged in
+                        if (loggedIn) {
+                            const bookId = button.getAttribute('data-book-id');
+                            // Implement loan functionality with bookId
+                            alert(`Loan functionality for Book ID ${bookId} to be implemented`);
+                        } else {
+                            // Redirect to Register page
+                            window.location.href = '/register';
+                        }
+                    });
+                });
+            })
+            .catch(error => console.error('Error fetching books:', error));
+    </script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+body {
+    font-family: 'Courier New', Courier, monospace;
+    color: #ff0000;
+    text-align: center;
+    text-shadow: 2px 2px #ddbf16;
+    font-size: 20px;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #704214; /* Matching the color of the footer */
+    color: #ffcc33;
+    padding: 10px 0;
+    text-align: center;
+}
+
+header nav {
+    background-color: #704214; /* Matching the color of the footer */
+    padding: 10px 0;
+    text-align: center;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: #ffcc33;
+    text-decoration: none;
+}
+
+main {
+    padding: 20px;
+    background-color: #c2eb09;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+footer {
+    background-color: #704214;
+    color: #ffcc33;
+    text-align: center;
+    padding: 10px 0;
+}
+
+/* Styling for car cards */
+.car-card {
+    background-color: #754c1a;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.car-card h3 {
+    color: #704214;
+}
+
+.car-card button {
+    background-color: #f57f17;
+    color: #f50c0c;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background-color 0.3s ease;
+}
+
+.car-card button:hover {
+    background-color: #ef6c00;
+}
+
+/* Styling for cart section */
+#cart {
+    background-color: #d7831d;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-top: 20px;
+}
+
+#cart-items {
+    list-style-type: none;
+    padding: 0;
+}
+
+#cart-items li {
+    margin-bottom: 10px;
+}
+
+#cart-items li span {
+    font-weight: bold;
+}
+
+/* Styling for info center section */
+#info {
+    background-color: #fd9d29;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-top: 20px;
+}
+
+/* Add styles for the input elements */
+input[type="text"] {
+    padding: 10px;
+    border-radius: 5px;
+    border: 2px solid #FF4500;
+    background-color: #eee209;
+    margin-bottom: 10px;
+    width: 300px;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+}
+
+input[type="text"]:focus {
+    background-color: #dbc928;
+    outline: none;
+}
+
+.deals-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.deal {
+    width: calc(33.33% - 20px);
+    margin: 10px;
+    text-align: center;
+}
+
+.deal img {
+    max-width: 100%;
+    height: auto;
+    max-height: 200px; /* Limiting the height of the images */
+}
+
+@media (max-width: 768px) {
+    .deal {
+        width: calc(50% - 20px);
+    }
+}
