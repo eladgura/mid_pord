@@ -1,5 +1,3 @@
-# app/routes/users.py
-
 import datetime
 import bcrypt
 from flask import Blueprint, request, jsonify
