@@ -1,6 +1,5 @@
 import secrets
 from app import db
-import bcrypt  # Import bcrypt library for password hashing
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
