@@ -15,7 +15,7 @@ def create_app():
     jwt = JWTManager(app)  # Initialize JWTManager here
     
     with app.app_context():
-        from app.models import User, Book, Loan  # Import models
+        ##from app.models import User, Book, Loan  # Import models
         from app.routes import auth, books, loans, users  # Import routes
         
         app.register_blueprint(auth.auth_bp, url_prefix='/api')

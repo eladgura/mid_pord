@@ -37,6 +37,5 @@ class Loan(db.Model):
             'returned_date': self.returned_date.isoformat() if self.returned_date else None,
             'overdue': self.overdue
         }
-
     def __repr__(self):
         return f'<Loan {self.id}>'

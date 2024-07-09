@@ -5,94 +5,80 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
-    <style>
-        /* Your CSS styles here */
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Welcome, <span id="username"></span>!</h1>
-
-    <h2>My Loans</h2>
-    <ul id="loans-list"></ul>
-
-    <h2>Late Loans</h2>
-    <ul id="late-loans-list"></ul>
-
-    <h2>Change Password</h2>
-    <form id="change-password-form">
-        <input type="password" name="new_password" placeholder="Enter new password" required>
-        <div class="button-container">
-            <button type="submit">Change Password</button>
+    <div class="container">
+        <h1>User Profile</h1>
+        <div id="profile-info">
+            <p><strong>Username:</strong> <span id="username"></span></p>
+            <p><strong>Email:</strong> <span id="email"></span></p>
+            <p><strong>Admin:</strong> <span id="is_admin"></span></p>
         </div>
-    </form>
-
-    <h2>Change Username</h2>
-    <form id="change-username-form">
-        <input type="text" name="new_username" placeholder="Enter new username" required>
-        <div class="button-container">
-            <button type="submit">Change Username</button>
-        </div>
-    </form>
+        <h2>Update Profile</h2>
+        <form id="update-profile-form">
+            <div class="form-group">
+                <label for="new-username">Username</label>
+                <input type="text" id="new-username" name="username" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="new-email">Email</label>
+                <input type="email" id="new-email" name="email" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="new-password">Password</label>
+                <input type="password" id="new-password" name="password" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Update Profile</button>
+        </form>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-        };
-
-        // Fetch user profile
-        axios.get('http://localhost:5000/api/profile', { headers })
+        // Function to fetch user profile data
+        function fetchProfile() {
+            const token = localStorage.getItem('access_token');
+            axios.get('http://localhost:5000/api/users/me', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
             .then(response => {
-                const user = response.data.user;
+                const user = response.data;
                 document.getElementById('username').textContent = user.username;
-
-                // Display loans
-                const loansList = document.getElementById('loans-list');
-                user.loans.forEach(loan => {
-                    const li = document.createElement('li');
-                    li.textContent = `Book: ${loan.book_name}, Due Date: ${loan.due_date}`;
-                    loansList.appendChild(li);
-                });
-
-                // Display late loans
-                const lateLoansList = document.getElementById('late-loans-list');
-                user.late_loans.forEach(loan => {
-                    const li = document.createElement('li');
-                    li.textContent = `Book: ${loan.book_name}, Due Date: ${loan.due_date}`;
-                    lateLoansList.appendChild(li);
-                });
+                document.getElementById('email').textContent = user.email;
+                document.getElementById('is_admin').textContent = user.is_admin ? 'Yes' : 'No';
+                document.getElementById('new-username').value = user.username;
+                document.getElementById('new-email').value = user.email;
             })
             .catch(error => console.error('Error fetching profile:', error));
+        }
 
-        // Function to handle changing password
-        document.getElementById('change-password-form').addEventListener('submit', function(event) {
+        // Function to handle profile update
+        document.getElementById('update-profile-form').addEventListener('submit', function(event) {
             event.preventDefault();
+            const token = localStorage.getItem('access_token');
             const formData = new FormData(this);
-            axios.post('http://localhost:5000/api/change_password', {
-                new_password: formData.get('new_password')
-            }, { headers })
-            .then(response => {
-                alert(response.data.message);
-                // Optionally clear the form or update UI
+            const updateData = {
+                username: formData.get('username'),
+                email: formData.get('email'),
+                password: formData.get('password')
+            };
+
+            axios.put('http://localhost:5000/api/users/me', updateData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
             })
-            .catch(error => console.error('Error changing password:', error));
+            .then(response => {
+                alert('Profile updated successfully');
+                fetchProfile();
+            })
+            .catch(error => console.error('Error updating profile:', error));
         });
 
-        // Function to handle changing username
-        document.getElementById('change-username-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const formData = new FormData(this);
-            axios.post('http://localhost:5000/api/change_username', {
-                new_username: formData.get('new_username')
-            }, { headers })
-            .then(response => {
-                alert(response.data.message);
-                document.getElementById('username').textContent = formData.get('new_username');
-                // Optionally clear the form or update UI
-            })
-            .catch(error => console.error('Error changing username:', error));
-        });
+        // Fetch profile on page load
+        document.addEventListener('DOMContentLoaded', fetchProfile);
     </script>
 </body>
 </html>

@@ -20,6 +20,7 @@ def get_book(id):
     book = Book.query.get_or_404(id)
     return jsonify(book.to_dict())
 
+# POST add a new book
 @books_bp.route('/books', methods=['POST'])
 @jwt_required()
 def add_book():
@@ -50,33 +51,19 @@ def update_book(id):
     db.session.commit()
     return jsonify(book.to_dict())
 
-@books_bp.route('/books/<int:book_id>', methods=['DELETE'])
+# DELETE a book by ID (only admins can delete)
+@books_bp.route('/books/<int:id>', methods=['DELETE'])
 @jwt_required()
-def delete_book(book_id):
+def delete_book(id):
     current_user = get_jwt_identity()
     user = User.query.filter_by(username=current_user['username']).first()
 
     if not user.is_admin:
         return jsonify({"message": "Admin access required"}), 403
 
-    book = Book.query.get_or_404(book_id)
+    book = Book.query.get_or_404(id)
     book.in_stock = 0  # Mark as out of stock
     db.session.commit()
     
     return jsonify({"message": "Book marked as out of stock"}), 200
 
-#WARNING!!!!!!!!!!!
-# DELETE a book by ID (only admins can delete)(and it is permenent)
-#@books_bp.route('/books/<int:id>', methods=['DELETE'])
-#@jwt_required()
-#def delete_book(id):
-   # book = Book.query.get_or_404(id)
-   # current_user = get_jwt_identity()
-   # user = User.query.filter_by(username=current_user['username']).first()
-
-   # if not user.is_admin:
-     #   return jsonify({"message": "Admin privileges required"}), 403
-
-   ## book.in_stock = 0
-    ##db.session.commit()
-    ##return '', 204

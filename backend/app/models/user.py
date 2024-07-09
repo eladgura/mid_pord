@@ -23,3 +23,4 @@ class User(db.Model):
             'picture': self.picture,
             'is_admin': self.is_admin
         }
+

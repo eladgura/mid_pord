@@ -35,9 +35,12 @@
             })
             .then(response => {
                 localStorage.setItem('access_token', response.data.access_token);
-                window.location.href = 'http://127.0.0.1:5500/frontend/home.html'; // Redirect to home page upon successful login
+                window.location.href = '/frontend/home.html'; // Redirect to home page upon successful login
             })
-            .catch(error => console.error('Error logging in:', error));
+            .catch(error => {
+                console.error('Error logging in:', error);
+                alert('Error logging in: ' + (error.response ? error.response.data.message : 'Server not reachable'));
+            });
         });
     </script>
 </body>

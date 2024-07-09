@@ -10,10 +10,16 @@ class Book(db.Model):
     picture = db.Column(db.String(100))
     genre = db.Column(db.String(100))
     author = db.Column(db.String(100))
-    in_stock = db.Column(db.Boolean, default=True)
+    in_stock = db.Column(db.Boolean, default=True)# Boolean field to track availability
 
     def __repr__(self):
         return f"<Book {self.name}>"
+
+    def __init__(self, name, genre, author, in_stock=True):
+        self.name = name
+        self.genre = genre
+        self.author = author
+        self.in_stock = in_stock
 
     def to_dict(self):
         return {
