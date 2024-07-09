@@ -8,7 +8,7 @@ class User(db.Model):
     username = db.Column(db.String(100), unique=False, nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
     picture = db.Column(db.String(100))
-    is_admin = db.Column(db.Boolean, default=False)
+    is_admin = db.Column(db.Boolean, default=True)
     password = db.Column(db.String(128), nullable=False)
 
     def __repr__(self):

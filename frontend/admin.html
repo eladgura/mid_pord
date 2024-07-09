@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+        <div id="admin-section" style="display: none;">
+            <h2>Manage Books</h2>
+            <form id="add-book-form">
+                <label for="title">Title:</label>
+                <input type="text" id="name" name="name" required>
+                <label for="author">Author:</label>
+                <input type="text" id="author" name="author" required>
+                <label for="year">Year:</label>
+                <input type="number" id="year" name="year">
+                <label for="in_stock">In Stock:</label>
+                <input type="number" id="in_stock" name="in_stock">
+                <button type="submit">Add Book</button>
+            </form>
+            <h2>Delete Book</h2>
+            <form id="delete-book-form">
+                <label for="delete-book-id">Book ID:</label>
+                <input type="text" id="delete-book-id" name="delete-book-id" required>
+                <button type="submit">Delete Book</button>
+            </form>
+            <h2>Contributors</h2>
+            <ul id="contributors-list"></ul>
+            <h2>Loans</h2>
+            <ul id="loans-list"></ul>
+        </div>
+        <div id="no-access" style="display: none;">
+            <p>You do not have access to this page.</p>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check if the user is logged in and is an admin
+            fetch('/api/check-admin', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.is_admin) {
+                    document.getElementById('admin-section').style.display = 'block';
+                    loadContributors();
+                    loadLoans();
+                } else {
+                    document.getElementById('no-access').style.display = 'block';
+                }
+            });
+
+            // Add book form submission
+            document.getElementById('add-book-form').addEventListener('submit', function (event) {
+                event.preventDefault();
+                const formData = new FormData(this);
+                fetch('/api/books', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    },
+                    body: JSON.stringify(Object.fromEntries(formData)),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert(data.message);
+                    }
+                });
+            });
+
+            // Delete book form submission
+            document.getElementById('delete-book-form').addEventListener('submit', function (event) {
+                event.preventDefault();
+                const bookId = document.getElementById('delete-book-id').value;
+                fetch(`/api/books/${bookId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert(data.message);
+                    }
+                });
+            });
+        });
+
+        function loadContributors() {
+            fetch('/api/contributors', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const list = document.getElementById('contributors-list');
+                list.innerHTML = '';
+                data.contributors.forEach(contributor => {
+                    const li = document.createElement('li');
+                    li.textContent = contributor.name;
+                    list.appendChild(li);
+                });
+            });
+        }
+
+        function loadLoans() {
+            fetch('/api/loans', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const list = document.getElementById('loans-list');
+                list.innerHTML = '';
+                data.loans.forEach(loan => {
+                    const li = document.createElement('li');
+                    li.textContent = `Book ID: ${loan.book_id}, User ID: ${loan.user_id}, Due Date: ${loan.due_date}`;
+                    list.appendChild(li);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
